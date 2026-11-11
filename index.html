@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Illary Textiles - Prototipo Web EVI1-U1 (UNA Puno)</title>
+  <style>
+    :root {
+      --primary: #8B0000; /* Rojo Borgoña Alpaca */
+      --primary-hover: #660000;
+      --secondary: #D4AF37; /* Dorado Artesanal */
+      --bg-light: #F9F6F0;
+      --text-dark: #2C2C2C;
+      --text-muted: #555555;
+      --white: #FFFFFF;
+      --card-bg: #FFFFFF;
+      --border: #E5E0D8;
+      --success: #2E7D32;
+      --danger: #C62828;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo-container h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+
+    .logo-container p {
+      font-size: 0.8rem;
+      opacity: 0.85;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--white);
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: var(--white);
+      color: var(--primary);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* Section Views */
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    /* Catalog Layout */
+    .catalog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      background: #EAE5DC;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .product-img-box {
+      width: 100%;
+      height: 200px;
+      background-color: #E0DACC;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .badge-out {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--danger);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .product-info {
+      padding: 1.2rem;
+    }
+
+    .product-info h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .product-price {
+      font-size: 1.25rem;
+      color: var(--primary);
+      font-weight: bold;
+      margin-bottom: 0.4rem;
+    }
+
+    .product-stock {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .btn-buy {
+      width: 100%;
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    .btn-buy:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Checkout / Form */
+    .checkout-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #CCC;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    /* Admin Panel */
+    .admin-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .table-admin {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .table-admin th, .table-admin td {
+      border: 1px solid var(--border);
+      padding: 12px;
+      text-align: left;
+    }
+
+    .table-admin th {
+      background: var(--bg-light);
+    }
+
+    .input-sm {
+      width: 80px;
+      padding: 6px;
+    }
+
+    /* Kanban */
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .kanban-col {
+      background: #EFECE6;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .kanban-col h3 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .kanban-card {
+      background: white;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .tag-must {
+      background: #FFEAEA;
+      color: var(--danger);
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <h1>Illary Textiles</h1>
+      <p>Asociación de Artesanos de Alpaca - Puno</p>
+    </div>
+    <nav>
+      <button class="nav-btn active" onclick="switchView('catalog')">Catálogo (HU-01)</button>
+      <button class="nav-btn" onclick="switchView('checkout')">Pedido (HU-02)</button>
+      <button class="nav-btn" onclick="switchView('admin')">Admin Stock (HU-03)</button>
+      <button class="nav-btn" onclick="switchView('kanban')">Tablero Kanban</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- VISTA 1: CATÁLOGO (HU-01) -->
+    <section id="view-catalog" class="view-section active">
+      <div class="catalog-header">
+        <h2>Catálogo de Prendas de Alpaca</h2>
+        <div class="filter-group">
+          <button class="filter-btn active" onclick="filterCat('all')">Todos</button>
+          <button class="filter-btn" onclick="filterCat('chompas')">Chompas</button>
+          <button class="filter-btn" onclick="filterCat('chalinas')">Chalinas</button>
+          <button class="filter-btn" onclick="filterCat('ponchos')">Ponchos</button>
+        </div>
+      </div>
+      <div class="products-grid" id="products-container">
+        <!-- Render dinámico desde JS -->
+      </div>
+    </section>
+
+    <!-- VISTA 2: FORMULARIO DE PEDIDO (HU-02) -->
+    <section id="view-checkout" class="view-section">
+      <div class="checkout-container">
+        <h2>Registrar Pedido Digital (HU-02)</h2>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">Complete sus datos para generar su código de orden único.</p>
+        <form id="order-form" onsubmit="handleOrderSubmit(event)">
+          <div class="form-group">
+            <label for="prod-select">Prenda Seleccionada:</label>
+            <select id="prod-select" required>
+              <option value="Chompa Alpaca Imperial">Chompa Alpaca Imperial - S/ 180.00</option>
+              <option value="Chalina Fina Andina">Chalina Fina Andina - S/ 75.00</option>
+              <option value="Poncho Tradicional Puno">Poncho Tradicional Puno - S/ 250.00</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="client-name">Nombre Completo:</label>
+            <input type="text" id="client-name" placeholder="Ej. Juan Pérez" required>
+          </div>
+          <div class="form-group">
+            <label for="client-phone">Celular (WhatsApp):</label>
+            <input type="tel" id="client-phone" placeholder="Ej. 951234567" required>
+          </div>
+          <div class="form-group">
+            <label for="client-city">Ciudad de Destino:</label>
+            <input type="text" id="client-city" placeholder="Ej. Arequipa, Lima, Cusco" required>
+          </div>
+          <button type="submit" class="btn-buy" style="margin-top: 1rem;">Confirmar Pedido</button>
+        </form>
+
+        <div id="order-result" style="display:none; margin-top: 1.5rem; padding: 1rem; background: #E8F5E9; border: 1px solid #A5D6A7; border-radius: 4px;">
+          <h3 style="color: var(--success); font-size: 1.1rem;">¡Orden Generada con Éxito!</h3>
+          <p id="order-code" style="font-weight: bold; margin-top: 0.5rem;"></p>
+          <p style="font-size: 0.85rem; color: #555;">Nos pondremos en contacto vía WhatsApp para coordinar el envío.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA 3: PANEL ADMINISTRADOR (HU-03) -->
+    <section id="view-admin" class="view-section">
+      <div class="admin-container">
+        <h2>Panel de Control - Gestión de Stock y Precios (HU-03)</h2>
+        <p style="font-size: 0.9rem; color: #666;">Modifique el stock a 0 para comprobar la actualización inmediata de la etiqueta "Agotado" en la tienda.</p>
+        
+        <table class="table-admin">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Prenda</th>
+              <th>Categoría</th>
+              <th>Precio (S/)</th>
+              <th>Stock</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="admin-table-body">
+            <!-- Render dinámico -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VISTA 4: TABLERO KANBAN -->
+    <section id="view-kanban" class="view-section">
+      <h2>Tablero Kanban del Proyecto (G-03 / G-04)</h2>
+      <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">Seguimiento de historias de usuario priorizadas en el Product Backlog.</p>
+      
+      <div class="kanban-board">
+        <div class="kanban-col">
+          <h3>POR HACER</h3>
+          <div class="kanban-card">
+            <span class="tag-must">Must - 5 pts</span>
+            <h4 style="margin: 0.5rem 0 0.2rem 0;">HU-03: Actualizar stock y precios</h4>
+            <p style="font-size: 0.8rem; color: #555;">Como admin, quiero cambiar precios y stock para evitar vender agotados.</p>
+            <p style="font-size: 0.75rem; color: #888; margin-top: 0.4rem;">Req. Asoc: RF-03</p>
+          </div>
+        </div>
+        <div class="kanban-col">
+          <h3>EN PROCESO</h3>
+          <div class="kanban-card">
+            <span class="tag-must">Must - 8 pts</span>
+            <h4 style="margin: 0.5rem 0 0.2rem 0;">HU-02: Registrar pedido</h4>
+            <p style="font-size: 0.8rem; color: #555;">Como cliente, quiero completar mis datos para generar una orden digital.</p>
+            <p style="font-size: 0.75rem; color: #888; margin-top: 0.4rem;">Req. Asoc: RF-02</p>
+          </div>
+        </div>
+        <div class="kanban-col">
+          <h3>TERMINADO</h3>
+          <div class="kanban-card">
+            <span class="tag-must" style="background: #E8F5E9; color: var(--success);">Must - 5 pts</span>
+            <h4 style="margin: 0.5rem 0 0.2rem 0;">HU-01: Ver catálogo de prendas</h4>
+            <p style="font-size: 0.8rem; color: #555;">Como cliente, quiero explorar productos por categoría con fotos y precios.</p>
+            <p style="font-size: 0.75rem; color: #888; margin-top: 0.4rem;">Req. Asoc: RF-01</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Desarrollo Basado en Plataformas I (SIS302) | Universidad Nacional del Altiplano - Puno</p>
+    <p>Estudiante: Jhon Michel Mamani Calisaya | Docente: Fredy Collanqui</p>
+  </footer>
+
+  <script>
+    // Datos globales del catálogo
+    let products = [
+      { id: 1, name: "Chompa Alpaca Imperial", cat: "chompas", price: 180.00, stock: 8 },
+      { id: 2, name: "Chalina Fina Andina", cat: "chalinas", price: 75.00, stock: 12 },
+      { id: 3, name: "Poncho Tradicional Puno", cat: "ponchos", price: 250.00, stock: 0 },
+      { id: 4, name: "Chompa Cuello Alto Alpaca", cat: "chompas", price: 195.00, stock: 5 }
+    ];
+
+    function switchView(viewName) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById('view-' + viewName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function renderProducts(filter = 'all') {
+      const container = document.getElementById('products-container');
+      container.innerHTML = '';
+
+      const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
+
+      filtered.forEach(p => {
+        const isOut = p.stock === 0;
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="product-img-box">
+            ${p.name}
+            ${isOut ? '<span class="badge-out">Agotado</span>' : ''}
+          </div>
+          <div class="product-info">
+            <h3>${p.name}</h3>
+            <div class="product-price">S/ ${p.price.toFixed(2)}</div>
+            <div class="product-stock">Stock disponible: ${p.stock} unidades</div>
+            <button class="btn-buy" ${isOut ? 'disabled' : ''} onclick="quickBuy('${p.name}')">
+              ${isOut ? 'Sin Stock' : 'Realizar Pedido'}
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterCat(cat) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderProducts(cat);
+    }
+
+    function quickBuy(prodName) {
+      document.getElementById('prod-select').value = prodName;
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById('view-checkout').classList.add('active');
+    }
+
+    function handleOrderSubmit(e) {
+      e.preventDefault();
+      const code = 'ORD-ILLARY-' + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('order-code').innerText = 'Código de Orden: ' + code;
+      document.getElementById('order-result').style.display = 'block';
+      document.getElementById('order-form').reset();
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById('admin-table-body');
+      tbody.innerHTML = '';
+
+      products.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td style="text-transform: capitalize;">${p.cat}</td>
+          <td><input type="number" class="input-sm" value="${p.price}" onchange="updatePrice(${p.id}, this.value)"></td>
+          <td><input type="number" class="input-sm" value="${p.stock}" onchange="updateStock(${p.id}, this.value)"></td>
+          <td><button style="padding: 4px 8px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="saveAdminChanges()">Guardar</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateStock(id, val) {
+      const p = products.find(prod => prod.id === id);
+      if (p) p.stock = parseInt(val) || 0;
+    }
+
+    function updatePrice(id, val) {
+      const p = products.find(prod => prod.id === id);
+      if (p) p.price = parseFloat(val) || 0;
+    }
+
+    function saveAdminChanges() {
+      renderProducts();
+      alert('¡Datos actualizados correctamente! Si el stock pasó a 0, verás la etiqueta "Agotado" en el catálogo.');
+    }
+
+    // Inicialización
+    renderProducts();
+    renderAdminTable();
+  </script>
+</body>
+</html>
